@@ -25,5 +25,4 @@ class ControladorFactura
         return $this->iFacturaDao->generarFactura($factura);
     }
 
-
 }

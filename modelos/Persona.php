@@ -12,6 +12,7 @@ class Persona
     private string $direccion;
     private string $documento;
     private int $rol;
+    private string $password;
 
     public function __construct()
     {
@@ -87,7 +88,15 @@ class Persona
         $this->rol = $rol;
     }
 
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
 
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
 
 
 }

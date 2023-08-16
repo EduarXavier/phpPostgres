@@ -12,5 +12,6 @@ interface IUsuarioDao
     public function addUsuario(Persona $usuario): ?bool;
     public function actualizarUsuario(Persona $usuario): ?bool;
     public  function eliminarUsuario(int $id): ?bool;
+    public function login(string $correo, string $clave): ?Persona;
 
 }

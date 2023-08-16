@@ -24,6 +24,7 @@ define("TPERSONATELEFONO", "telefono");
 define("TPERSONACORREO", "correo");
 define("TPERSONADIRECCION", "direccion");
 define("TPERSONADOCUMENTO", "documento");
+define("TPERSONAPASSWORD", "password");
 define("TPERSONAROL", "rol");
 
 define("TPRODUCTOFACTURA", "productofactura");

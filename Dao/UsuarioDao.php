@@ -18,7 +18,6 @@ class UsuarioDao extends Conexion implements IUsuarioDao
         $this->pdo = $this->getConexion();
     }
 
-
     public function verUsuario(int $id): ?Persona
     {
         $sql = "SELECT * FROM ". TPERSONA . " WHERE " . TPERSONAID . " = " . $id;
@@ -40,6 +39,8 @@ class UsuarioDao extends Conexion implements IUsuarioDao
                 $usuario->setRol($resultado[TPERSONAROL]);
                 $usuario->setDireccion($resultado[TPERSONADIRECCION]);
                 $usuario->setDocumento($resultado[TPERSONADOCUMENTO]);
+                $usuario->setPassword($resultado[TPERSONAPASSWORD]);
+
 
                 return $usuario;
             }
@@ -67,6 +68,8 @@ class UsuarioDao extends Conexion implements IUsuarioDao
             $usuario->setRol($resultado[TPERSONAROL]);
             $usuario->setDireccion($resultado[TPERSONADIRECCION]);
             $usuario->setDocumento($resultado[TPERSONADOCUMENTO]);
+            $usuario->setPassword($resultado[TPERSONAPASSWORD]);
+
             $usuarios[] = $usuario;
         }
 
@@ -79,9 +82,9 @@ class UsuarioDao extends Conexion implements IUsuarioDao
         $sql = "INSERT INTO " .TPERSONA . "("
             .TPERSONANOMBRE.", ".TPERSONATELEFONO. ", "
             .TPERSONACORREO.", ".TPERSONADIRECCION. ", "
-            .TPERSONADOCUMENTO.", ".TPERSONAROL
-            .") VALUES(:nombre, :telefono, :correo, "
-            .":direccion, :documento, :rol)";
+            .TPERSONADOCUMENTO.", ".TPERSONAROL .","
+            .TPERSONAPASSWORD .") VALUES(:nombre, :telefono, :correo, "
+            .":direccion, :documento, :rol, :password)";
 
         $statement = $this->pdo->prepare($sql);
         $nombre = $usuario->getNombre();
@@ -89,6 +92,7 @@ class UsuarioDao extends Conexion implements IUsuarioDao
         $correo = $usuario->getCorreo();
         $direccion = $usuario->getDireccion();
         $documento = $usuario->getDocumento();
+        $password = password_hash($usuario->getPassword(), PASSWORD_DEFAULT);
         $rol = $usuario->getRol();
 
         $statement->bindParam(':nombre',$nombre);
@@ -97,6 +101,7 @@ class UsuarioDao extends Conexion implements IUsuarioDao
         $statement->bindParam(':direccion',$direccion);
         $statement->bindParam(':documento',$documento);
         $statement->bindParam(':rol',$rol);
+        $statement->bindParam(':password',$password);
 
         return $statement->execute();
 
@@ -113,8 +118,9 @@ class UsuarioDao extends Conexion implements IUsuarioDao
                 .TPERSONANOMBRE."= :nombre, "
                 .TPERSONATELEFONO. "= :telefono, "
                 .TPERSONACORREO."= :correo, "
-                .TPERSONADIRECCION. "= :direccion "
-                .TPERSONADOCUMENTO."= :documento WHERE "
+                .TPERSONADIRECCION. "= :direccion, "
+                .TPERSONADOCUMENTO."= :documento,"
+                .TPERSONAPASSWORD ."= :password WHERE "
                 .TPERSONAID . "= :id ";
 
             $statement = $this->pdo->prepare($sql);
@@ -123,6 +129,11 @@ class UsuarioDao extends Conexion implements IUsuarioDao
             $correo = $usuario->getCorreo() ?? $findUser->getCorreo();
             $direccion = $usuario->getDireccion() ?? $findUser->getDireccion();
             $documento = $usuario->getDocumento() ?? $findUser->getDocumento();
+            $password = $usuario->getPassword() ?
+                password_hash($usuario->getPassword(), PASSWORD_DEFAULT)
+                :
+                $findUser->getPassword();
+
             $id = $findUser->getId();
 
             $statement->bindParam(':nombre',$nombre);
@@ -130,6 +141,8 @@ class UsuarioDao extends Conexion implements IUsuarioDao
             $statement->bindParam(':correo', $correo);
             $statement->bindParam(':direccion', $direccion);
             $statement->bindParam(':documento', $documento);
+            $statement->bindParam(':password',$password);
+
             $statement->bindParam(':id', $id);
 
             return $statement->execute();
@@ -174,9 +187,44 @@ class UsuarioDao extends Conexion implements IUsuarioDao
             $usuario->setRol($resultado[TPERSONAROL]);
             $usuario->setDireccion($resultado[TPERSONADIRECCION]);
             $usuario->setDocumento($resultado[TPERSONADOCUMENTO]);
+            $usuario->setPassword($resultado[TPERSONAPASSWORD]);
             $usuarios[] = $usuario;
         }
 
         return $usuarios;
+    }
+
+    public function login(string $correo, string $clave): ?Persona
+    {
+        $sql = "SELECT * FROM ". TPERSONA . " WHERE "
+            .TPERSONACORREO . " = '" . $correo ."'" ;
+
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute();
+
+        $resultados = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        if($resultados){
+
+            foreach($resultados as $resultado)
+            {
+                $usuario = new Persona();
+                $usuario->setId($resultado[TPERSONAID]);
+                $usuario->setNombre($resultado[TPERSONANOMBRE]);
+                $usuario->setTelefono($resultado[TPERSONATELEFONO]);
+                $usuario->setCorreo($resultado[TPERSONACORREO]);
+                $usuario->setRol($resultado[TPERSONAROL]);
+                $usuario->setDireccion($resultado[TPERSONADIRECCION]);
+                $usuario->setDocumento($resultado[TPERSONADOCUMENTO]);
+                $usuario->setPassword($resultado[TPERSONAPASSWORD]);
+
+                if(password_verify($clave, $usuario->getPassword())){
+                    return $usuario;
+                }
+            }
+
+        }
+
+        return null;
     }
 }

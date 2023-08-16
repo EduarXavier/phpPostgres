@@ -70,4 +70,8 @@ class ControladorUsuario
         return $clientes ?? null;
     }
 
+    public function login(string $user, string $password){
+        return $this->iUsuarioDao->login($user, $password);
+    }
+
 }
