@@ -24,6 +24,31 @@ else
 $factura = $controladorFactura->verFactura($id);
 $usuarioFactura = $controladorUsuario->findByDocumento($factura?->getDocuemntoPerosna());
 $nombrePagina = "Factura - ". $id;
+
+$objetosRepetidos = [];
+
+foreach ($factura->getProductos() as $producto)
+{
+    $clave = serialize([
+        'nombre' => $producto->getNombre(),
+    ]);
+    if (array_key_exists($clave, $objetosRepetidos)) {
+        $objetosRepetidos[$clave]++;
+    } else {
+        $objetosRepetidos[$clave] = 1;
+    }
+}
+
+function buscarObjetoRepetido($arrayDeObjetos, $propiedades)
+{
+    foreach ($arrayDeObjetos as $objeto) {
+        if ($objeto->getNombre() == $propiedades['nombre']) {
+            return $objeto;
+        }
+    }
+    return null;
+}
+
 include_once("../layouts/header.php");
 include_once("../layouts/nav.php");
 ?>
@@ -60,21 +85,27 @@ include_once("../layouts/nav.php");
         </table>
         <h2>Productos</h2>
 
-        <?php foreach ($factura->getProductos() as $producto): ?>
+        <?php foreach ($objetosRepetidos as $clave => $cantidad):
+
+                $propiedades = unserialize($clave);
+                $objetoRepetido = buscarObjetoRepetido($factura->getProductos(), $propiedades);
+
+            ?>
 
             <div class="media d-flex">
-                <img src="<?php echo $producto->getImagen() ?>"
+                <img src="<?php echo $objetoRepetido->getImagen() ?>"
                      class="align-self-end  ml-3"
                      alt="Producto"
                      style="max-height: 150px; margin-right: 20px"
                 >
                 <div class="media-body text-right">
-                    <h5 class="mt-0"><?php echo $producto->getnombre() ?></h5>
-                    <p>ID: <?php echo $producto->getId() ?></p>
-                    <p>Precio: $<?php echo $producto->getPrecio() ?></p>
+                    <h5 class="mt-0"><?php echo $objetoRepetido->getnombre() ?></h5>
+                    <p>ID: <?php echo $objetoRepetido->getId() ?></p>
+                    <p>Precio: $<?php echo $objetoRepetido->getPrecio() ?></p>
+                    <p>Cantidad: <?php echo $cantidad ?></p>
                 </div>
             </div>
-        
+
         <?php endforeach; ?>
         <hr>
         <p style="font-size: 25px"><b>Total</b>: $<?php echo $factura?->getTotal(); ?></p>
@@ -83,4 +114,6 @@ include_once("../layouts/nav.php");
 <?php endif; ?>
 
 
-<?php include_once("../layouts/footer.php");?>
+<?php
+include_once("../layouts/footer.php");
+?>

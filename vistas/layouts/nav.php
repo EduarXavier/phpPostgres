@@ -37,7 +37,7 @@ $rol = $_SESSION["rol"];
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        CLientes
+                        Clientes
                     </a>
                     <ul class="dropdown-menu">
                         <?php if($rol == 1): ?>

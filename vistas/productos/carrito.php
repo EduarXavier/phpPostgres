@@ -11,6 +11,8 @@ use controladores\ControladorProducto;
 $controladorProducto = new ControladorProducto();
 $carrito = true;
 $productos = array();
+$productosRepetidos = [];
+
 
 if(isset($_SESSION["rol"]))
 {
@@ -24,17 +26,34 @@ else
     header("Location: ../login.php?err=Credenciales%20invalidas");
 }
 
-
 foreach ($_SESSION["carrito"] as $idProducto)
 {
+
+    $clave = serialize([
+        'id' => $idProducto,
+    ]);
+    if (array_key_exists($clave, $productosRepetidos)) {
+        $productosRepetidos[$clave]++;
+    } else {
+        $productosRepetidos[$clave] = 1;
+    }
 
     $productoFind = $controladorProducto->verProducto($idProducto);
     $productos[] = $productoFind;
 
 }
 
-$cantProductos = count($_SESSION["carrito"]);
+function buscarObjetoRepetido($arrayDeObjetos, $propiedades)
+{
+    foreach ($arrayDeObjetos as $objeto) {
+        if ($objeto->getId() == $propiedades['nombre']) {
+            return $objeto;
+        }
+    }
+    return null;
+}
 
+$cantProductos = count($_SESSION["carrito"]);
 
 ?>
 
@@ -60,7 +79,44 @@ $cantProductos = count($_SESSION["carrito"]);
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
 
-        <?php include_once("vistaProductos.php"); ?>
+        <?php foreach ($productosRepetidos as $clave => $cantidad):
+                $propiedades = unserialize($clave);
+                $producto = buscarObjetoRepetido($productos, $propiedades);
+        ?>
+
+            <div class="col">
+                <div class="card shadow-lg rounded">
+                    <div class="card-header bg-secondary text-white">
+                        <img src="<?php echo $producto->getImagen()?> " style="width: 100%">
+                    </div>
+                    <div class="card-body">
+                        <strong> Producto: </strong> <?php echo ucfirst($producto->getNombre()); ?>
+                        <p><strong>ID:</strong> <?php echo $producto->getId(); ?></p>
+                        <p><strong>Codigo:</strong> <?php echo $producto->getCodigo(); ?></p>
+                        <p><strong>Precio:</strong> <?php echo $producto->getPrecio(); ?></p>
+                        <p><strong>Cantidad:</strong> <?php echo $cantidad ?></p>
+
+                        <?php if($_SESSION["rol"] == 1): ?>
+                            <a href="verProducto.php?id=<?php echo $producto->getId(); ?>" class="btn btn-primary">Ver producto</a>
+                        <?php endif;?>
+
+                        <?php if($_SESSION["rol"] == 2 && !$carrito): ?>
+
+                            <a
+                                    class="btn btn-outline-primary mt-2"
+                                    style="width: 100%;"
+                                    href="../../validaciones/carrito.php?id=<?php echo $producto->getId()?>"
+                            >
+                                Añadir al carrito
+                            </a>
+
+                        <?php endif;?>
+
+                    </div>
+                </div>
+            </div>
+
+        <?php endforeach; ?>
 
     </div>
 
