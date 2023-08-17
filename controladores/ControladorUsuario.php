@@ -28,6 +28,14 @@ class ControladorUsuario
         return $persona ?? null;
 
     }
+    public function findByDocumento(?string $id) : ?Persona
+    {
+
+        $persona = $this->iUsuarioDao->findByDocumento($id);
+
+        return $persona ?? null;
+
+    }
     public function verUsuarios() : ?array
     {
         $personas = $this->iUsuarioDao->verUsuarios();

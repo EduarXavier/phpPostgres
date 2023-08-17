@@ -1,9 +1,9 @@
 <?php
 
-session_start();
+$nombrePagina = "Dashboard";
+require_once("../layouts/header.php");
+require_once("../layouts/nav.php");
+?>
 
-if(!isset($_SESSION["usuario"]) || !isset($_SESSION["rol"])){
-    header("Location: ../vistas/login.php?err=Credenciales%20invalidas");
-}
+<?php include_once("../layouts/footer.php") ?>
 
-echo "Hola ". $_SESSION["usuario"];

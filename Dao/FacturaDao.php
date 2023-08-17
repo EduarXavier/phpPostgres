@@ -2,15 +2,21 @@
 
 namespace Dao;
 
+require_once("C:/xampp/htdocs/proyectosPhpStorm/phpConPostgreSql/Dao/IFacturaDao.php");
+require_once("C:/xampp/htdocs/proyectosPhpStorm/phpConPostgreSql/Dao/ProductoDao.php");
+require_once("C:/xampp/htdocs/proyectosPhpStorm/phpConPostgreSql/Dao/IProductosDao.php");
+require_once("C:/xampp/htdocs/proyectosPhpStorm/phpConPostgreSql/Dao/Conexion.php");
+
 use Dao\Conexion;
 use Dao\IFacturaDao;
 use Dao\IProductosDao;
 use Dao\ProductoDao;
 use modelos\Factura;
+use PDO;
 
 class FacturaDao extends Conexion implements IFacturaDao
 {
-    private $pdo;
+    private ?PDO $pdo;
     private IProductosDao $iDaoProductos;
 
     public function __construct()
@@ -21,9 +27,10 @@ class FacturaDao extends Conexion implements IFacturaDao
 
     public function verFactura(int $id): ?Factura
     {
-        $sql = "SELECT * FROM ". TFACTURA;
+        $sql = "SELECT * FROM ". TFACTURA. " WHERE " . TFACTURAID . "=" . $id;
         $statement = $this->pdo->prepare($sql);
-        $resultados = $statement->execute();
+        $statement->execute();
+        $resultados = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($resultados as $resultado){
 
@@ -34,17 +41,20 @@ class FacturaDao extends Conexion implements IFacturaDao
 
             $sqlP = "SELECT * FROM ". TPRODUCTOFACTURA . " WHERE " . TPFIDFACTURA . "=" . $id;
             $statementP = $this->pdo->prepare($sqlP);
-            $productosFactura = $statementP->execute();
+            $statementP->execute();
+
+            $productosFactura = $statementP->fetchAll(PDO::FETCH_ASSOC);
             $productos = array();
 
             foreach($productosFactura as $productoFactura)
             {
-                $productos[] = $this->iDaoProductos->verProducto($productoFactura["id"]);
+                $id = $productoFactura["idproducto"];
+                $productos[] = $this->iDaoProductos->verProducto($id);
             }
 
             $factura->setProductos($productos);
 
-            return $productos;
+            return $factura;
 
         }
 
@@ -52,39 +62,38 @@ class FacturaDao extends Conexion implements IFacturaDao
 
     }
 
-    public function generarFactura(Factura $factura): ?bool
+    public function generarFactura(Factura $factura): ?int
     {
         $productos = $factura->getProductos();
-        $sql = "INSERT INTO ". TFACTURA . "("
-            . TFACTURADOCUMENTO . ", " . TFACTURATOTAL
-            . ") VALUES(:documento, :total)";
-        $statement = $this->pdo->prepare($sql);
-
         $documento = $factura->getDocuemntoPerosna();
         $total = $factura->getTotal();
-        $statement.bindParam(":documento", $documento);
-        $statement.bindParam(":total", $total);
+
+        $sql = "INSERT INTO ". TFACTURA . "("
+            . TFACTURADOCUMENTO . ", " . TFACTURATOTAL
+            . ") VALUES($documento, $total)";
+        $statement = $this->pdo->prepare($sql);
 
         if($statement->execute()){
 
-            $sqlP = "SELECT * FROM ". TFACTURA;
-            $statementP = $this->pdo->prepare($sqlP);
-            $cantFactura = $statementP->execute();
-
-            $codigo = count($cantFactura);
+            $codigo = $this->pdo->lastInsertId();
 
             foreach ($productos as $producto){
-                $sqlPro = "INSER INTO ". TPRODUCTOFACTURA . "("
+                $id = $producto->getId();
+
+                $sqlPro = "INSERT INTO ". TPRODUCTOFACTURA . "("
                     .TPFIDFACTURA. ", ".TPFIDPRODUCTO
-                    ."VALUES (:factura, :producto)";
+                    .") VALUES ($codigo, $id)";
 
                 $statementProducto = $this->pdo->prepare($sqlPro);
-                $statementProducto.bindParam(":factura", $codigo);
-                $statementProducto.bindParam(":producto", $producto->getId());
 
                 $statementProducto->execute();
             }
 
+            return $codigo;
+
         }
+
+        return null;
+
     }
 }

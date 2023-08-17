@@ -1,8 +1,8 @@
 <?php
 
 use controladores\ControladorUsuario;
-require_once("../controladores/ControladorUsuario.php");
 
+require_once("../controladores/ControladorUsuario.php");
 
 if(!empty($_POST["usuario"]) && !empty($_POST["clave"]))
 {
@@ -10,6 +10,7 @@ if(!empty($_POST["usuario"]) && !empty($_POST["clave"]))
 
     $user = $_POST["usuario"];
     $clave = $_POST["clave"];
+
     $usuario = $controladorPersona->login($user, $clave);
 
     if($usuario)
@@ -17,6 +18,8 @@ if(!empty($_POST["usuario"]) && !empty($_POST["clave"]))
         session_start();
         $_SESSION["usuario"] = $usuario->getCorreo();
         $_SESSION["rol"] = $usuario->getRol();
+        $_SESSION["id"] = $usuario->getId();
+        $_SESSION["carrito"] = array();
 
         header("Location: ../vistas/persona/dashboard.php");
     }

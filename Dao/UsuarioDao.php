@@ -51,9 +51,42 @@ class UsuarioDao extends Conexion implements IUsuarioDao
 
     }
 
+    public function findByDocumento(?string $documento): ?Persona
+    {
+        $sql = "SELECT * FROM ". TPERSONA . " WHERE " . TPERSONADOCUMENTO . " = '" . $documento . "'";
+
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute();
+
+        $resultados = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        if($resultados){
+
+            foreach($resultados as $resultado)
+            {
+                $usuario = new Persona();
+                $usuario->setId($resultado[TPERSONAID]);
+                $usuario->setNombre($resultado[TPERSONANOMBRE]);
+                $usuario->setTelefono($resultado[TPERSONATELEFONO]);
+                $usuario->setCorreo($resultado[TPERSONACORREO]);
+                $usuario->setRol($resultado[TPERSONAROL]);
+                $usuario->setDireccion($resultado[TPERSONADIRECCION]);
+                $usuario->setDocumento($resultado[TPERSONADOCUMENTO]);
+                $usuario->setPassword($resultado[TPERSONAPASSWORD]);
+
+
+                return $usuario;
+            }
+
+        }
+
+        return null;
+
+    }
+
     public function verUsuarios(): ?array
     {
-        $sql = "SELECT * FROM ". TPERSONA;
+        $sql = "SELECT * FROM ". TPERSONA. " LIMIT 100";
         $statement = $this->pdo->prepare($sql);
         $statement->execute();
         $usuarios = array();
@@ -172,7 +205,7 @@ class UsuarioDao extends Conexion implements IUsuarioDao
 
     public function verClientes(): ?array
     {
-        $sql = "SELECT * FROM ". TPERSONA . " WHERE " . TPERSONAROL . " = 2";
+        $sql = "SELECT * FROM ". TPERSONA . " WHERE " . TPERSONAROL . " = 2 LIMIT 100";
         $statement = $this->pdo->prepare($sql);
         $statement->execute();
         $usuarios = array();

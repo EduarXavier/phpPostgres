@@ -7,13 +7,13 @@ define("PASSWORD", 'eduar');
 
 define("TFACTURA", 'factura');
 define("TFACTURAID", 'id');
-define("TFACTURADOCUMENTO", "documentoPersona");
+define("TFACTURADOCUMENTO", "documentopersona");
 define("TFACTURATOTAL", "total");
 
 define("TPRODUCTO", "productos");
 define("TPRODUCTOID", "id");
 define("TPRODUCTOCODIGO", "codigo");
-define("TPRODUCTOPRECIO", "precio");
+define("TPRODUCTOPRECIO", "precios");
 define("TPRODUCTOIMAGEN", "imagen");
 define("TPRODUCTONOMBRE", "nombre");
 
@@ -28,5 +28,5 @@ define("TPERSONAPASSWORD", "password");
 define("TPERSONAROL", "rol");
 
 define("TPRODUCTOFACTURA", "productofactura");
-define("TPFIDFACTURA", "idFactura");
-define("TPFIDPRODUCTO", "idProducto");
+define("TPFIDFACTURA", "idfactura");
+define("TPFIDPRODUCTO", "idproducto");

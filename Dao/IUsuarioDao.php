@@ -7,6 +7,7 @@ use modelos\Persona;
 interface IUsuarioDao
 {
     public function verUsuario(int $id) : ?Persona;
+    public function findByDocumento(?string $documento): ?Persona;
     public function verClientes() : ?array;
     public function verUsuarios() : ?array;
     public function addUsuario(Persona $usuario): ?bool;

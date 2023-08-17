@@ -7,5 +7,5 @@ use modelos\Factura;
 interface IFacturaDao
 {
     public function verFactura(int $id): ?Factura;
-    public function generarFactura(Factura $factura): ?bool;
+    public function generarFactura(Factura $factura): ?int;
 }

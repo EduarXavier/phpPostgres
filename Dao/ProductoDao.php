@@ -4,6 +4,7 @@ namespace Dao;
 
 require_once("C:/xampp/htdocs/proyectosPhpStorm/phpConPostgreSql/Dao/IProductosDao.php");
 require_once("C:/xampp/htdocs/proyectosPhpStorm/phpConPostgreSql/Dao/Conexion.php");
+require_once("C:/xampp/htdocs/proyectosPhpStorm/phpConPostgreSql/modelos/Producto.php");
 
 use modelos\Producto;
 use PDO;
@@ -34,7 +35,7 @@ class ProductoDao extends Conexion implements IProductosDao
                 $producto->setNombre($resultado["nombre"]);
                 $producto->setCodigo($resultado["codigo"]);
                 $producto->setImagen($resultado["imagen"]);
-                $producto->setPrecio($resultado["precio"]);
+                $producto->setPrecio($resultado["precios"]);
 
                 return $producto;
             }
@@ -57,7 +58,7 @@ class ProductoDao extends Conexion implements IProductosDao
             $producto->setNombre($resultado["nombre"]);
             $producto->setCodigo($resultado["codigo"]);
             $producto->setImagen($resultado["imagen"]);
-            $producto->setPrecio($resultado["precio"]);
+            $producto->setPrecio($resultado["precios"]);
             $productos[] = $producto;
         }
 

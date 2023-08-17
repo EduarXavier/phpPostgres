@@ -12,7 +12,6 @@ class Factura
 
     public function __construct()
     {
-        $this->productos = array();
     }
 
     public function getId(): int
