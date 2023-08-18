@@ -47,18 +47,24 @@ class ProductoDao extends Conexion implements IProductosDao
     public function verProductos(): ?array
     {
         $sql = "SELECT * FROM ". TPRODUCTO;
+
         $statement = $this->pdo->prepare($sql);
         $statement->execute();
+
         $productos = array();
+
         $resultados = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($resultados as $resultado){
+        foreach ($resultados as $resultado)
+        {
             $producto = new Producto();
+
             $producto->setId($resultado["id"]);
             $producto->setNombre($resultado["nombre"]);
             $producto->setCodigo($resultado["codigo"]);
             $producto->setImagen($resultado["imagen"]);
             $producto->setPrecio($resultado["precios"]);
+
             $productos[] = $producto;
         }
 
@@ -73,11 +79,11 @@ class ProductoDao extends Conexion implements IProductosDao
             .") VALUES(:codigo, :imagen, :precio, :nombre)";
 
         $statement = $this->pdo->prepare($sql);
+
         $nombre = $producto->getNombre();
         $codigo = $producto->getCodigo();
         $imagen = $producto->getImagen();
         $precio = $producto->getPrecio();
-
 
         $statement->bindParam(':codigo',$codigo);
         $statement->bindParam(':imagen',$imagen);
@@ -94,7 +100,6 @@ class ProductoDao extends Conexion implements IProductosDao
 
         if($findProducto)
         {
-
             $sql = "UPDATE" .TPRODUCTO . " SET "
                 .TPRODUCTOCODIGO. "= :codigo, "
                 .TPRODUCTOIMAGEN. "= :imagen, "
@@ -103,6 +108,7 @@ class ProductoDao extends Conexion implements IProductosDao
                 .TPRODUCTOID . "= :id";
 
             $statement = $this->pdo->prepare($sql);
+
             $nombre = $producto->getNombre() ?? $findProducto->getNombre();
             $codigo = $producto->getCodigo() ?? $findProducto->getCodigo();
             $imagen = $producto->getImagen() ?? $findProducto->getImagen();
@@ -118,7 +124,10 @@ class ProductoDao extends Conexion implements IProductosDao
             return $statement->execute();
         }
         else{
+
             throw new Exception("El producto no ha sido encontrado");
+
         }
     }
+
 }

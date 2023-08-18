@@ -9,6 +9,17 @@ class Factura
     private string $docuemntoPerosna;
     private int $total;
     private array $productos;
+    private string $fecha;
+
+    public function getFecha(): string
+    {
+        return $this->fecha;
+    }
+
+    public function setFecha(string $fecha): void
+    {
+        $this->fecha = $fecha;
+    }
 
     public function __construct()
     {
@@ -52,11 +63,6 @@ class Factura
     public function setProductos(array $productos): void
     {
         $this->productos = $productos;
-    }
-
-    public function addProductos(Producto $producto)
-    {
-        $this->productos[] = $producto;
     }
 
 

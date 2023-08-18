@@ -4,7 +4,6 @@ namespace modelos;
 
 class Persona
 {
-
     private int $id;
     private string $nombre;
     private string $telefono;

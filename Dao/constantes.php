@@ -9,6 +9,7 @@ define("TFACTURA", 'factura');
 define("TFACTURAID", 'id');
 define("TFACTURADOCUMENTO", "documentopersona");
 define("TFACTURATOTAL", "total");
+define("TFACTURAFECHA", "fecha");
 
 define("TPRODUCTO", "productos");
 define("TPRODUCTOID", "id");
@@ -30,3 +31,5 @@ define("TPERSONAROL", "rol");
 define("TPRODUCTOFACTURA", "productofactura");
 define("TPFIDFACTURA", "idfactura");
 define("TPFIDPRODUCTO", "idproducto");
+
+?>

@@ -24,6 +24,16 @@ class ControladorFactura
         return $this->iFacturaDao->verFactura($id);
     }
 
+    public function verFacturas(): array
+    {
+        return $this->iFacturaDao->verFacturas();
+    }
+
+    public function verMisFacturas(string $documento): array
+    {
+        return $this->iFacturaDao->verMisFacturas($documento);
+    }
+
     public function generarFactura(Factura $factura): ?int
     {
         return $this->iFacturaDao->generarFactura($factura);

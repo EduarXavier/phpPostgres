@@ -19,35 +19,27 @@ class ControladorUsuario
         $this->iUsuarioDao = new UsuarioDao();
     }
 
-
     public function verUsuario(int $id) : ?Persona
     {
-
         $persona = $this->iUsuarioDao->verUsuario($id);
-
         return $persona ?? null;
-
     }
+
     public function findByDocumento(?string $id) : ?Persona
     {
-
         $persona = $this->iUsuarioDao->findByDocumento($id);
-
         return $persona ?? null;
-
     }
+
     public function verUsuarios() : ?array
     {
         $personas = $this->iUsuarioDao->verUsuarios();
-
         return $personas ?? null;
-
     }
+
     public function addUsuario(Persona $usuario): ?bool
     {
-
         return $this->iUsuarioDao->addUsuario($usuario);
-
     }
 
 
@@ -56,9 +48,7 @@ class ControladorUsuario
      */
     public function actualizarUsuario(Persona $usuario): ?bool
     {
-
         return $this->iUsuarioDao->actualizarUsuario($usuario);
-
     }
 
     /**
@@ -66,19 +56,17 @@ class ControladorUsuario
      */
     public  function eliminarUsuario(int $id): ?bool
     {
-
         return $this->iUsuarioDao->eliminarUsuario($id);
-
     }
 
     public  function verClientes(): ?array
     {
         $clientes = $this->iUsuarioDao->verClientes();
-
         return $clientes ?? null;
     }
 
-    public function login(string $user, string $password){
+    public function login(string $user, string $password): ?Persona
+    {
         return $this->iUsuarioDao->login($user, $password);
     }
 

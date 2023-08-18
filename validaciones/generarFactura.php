@@ -1,21 +1,22 @@
 <?php
 session_start();
 
-use controladores\ControladorFactura;
-use controladores\ControladorUsuario;
-use modelos\Producto;
-use modelos\Factura;
-use controladores\ControladorProducto;
-
 require_once("../controladores/ControladorUsuario.php");
 require_once("../controladores/ControladorProducto.php");
 require_once("../controladores/ControladorFactura.php");
 require_once("../modelos/Producto.php");
 require_once("../modelos/Factura.php");
 
+use controladores\ControladorFactura;
+use controladores\ControladorUsuario;
+use modelos\Producto;
+use modelos\Factura;
+use controladores\ControladorProducto;
+
 $controladorProducto = new ControladorProducto();
 $controladorPersona = new ControladorUsuario();
 $controladorFactura = new ControladorFactura();
+$factura = new Factura();
 
 if(!isset($_SESSION["usuario"]) ||
     !isset($_SESSION["rol"]) ||
@@ -44,14 +45,11 @@ foreach ($_SESSION["carrito"] as $producto)
     $productos[] = $productoFactura;
 }
 
-$factura = new Factura();
-
 $factura->setTotal($total);
 $factura->setDocuemntoPerosna($documento);
 $factura->setProductos($productos);
 
 $id = $controladorFactura->generarFactura($factura);
-var_dump($id);
 
 if($id)
 {

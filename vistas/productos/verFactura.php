@@ -18,7 +18,7 @@ if(!empty($_GET["id"]))
 }
 else
 {
-    header("Location: ../perosna/dahsboard.php");
+    header("Location: ../persona/dahsboard.php");
 }
 
 $factura = $controladorFactura->verFactura($id);
@@ -27,22 +27,25 @@ $nombrePagina = "Factura - ". $id;
 
 $objetosRepetidos = [];
 
-foreach ($factura->getProductos() as $producto)
+if($factura)
 {
-    $clave = serialize([
-        'nombre' => $producto->getNombre(),
-    ]);
-    if (array_key_exists($clave, $objetosRepetidos)) {
-        $objetosRepetidos[$clave]++;
-    } else {
-        $objetosRepetidos[$clave] = 1;
+    foreach ($factura?->getProductos() as $producto)
+    {
+        $clave = serialize([
+            'nombre' => $producto?->getNombre(),
+        ]);
+        if (array_key_exists($clave, $objetosRepetidos)) {
+            $objetosRepetidos[$clave]++;
+        } else {
+            $objetosRepetidos[$clave] = 1;
+        }
     }
 }
 
 function buscarObjetoRepetido($arrayDeObjetos, $propiedades)
 {
     foreach ($arrayDeObjetos as $objeto) {
-        if ($objeto->getNombre() == $propiedades['nombre']) {
+        if ($objeto?->getNombre() == $propiedades['nombre']) {
             return $objeto;
         }
     }
@@ -71,15 +74,17 @@ include_once("../layouts/nav.php");
                 <th>Documento</th>
                 <th>Teléfono</th>
                 <th>Email</th>
+                <th>Fecha</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-                <td>1</td>
+                <td><?php echo $usuarioFactura->getId(); ?></td>
                 <td><?php echo $usuarioFactura->getNombre(); ?></td>
                 <td><?php echo $usuarioFactura->getDocumento(); ?></td>
                 <td><?php echo $usuarioFactura->getTelefono(); ?></td>
                 <td><?php echo $usuarioFactura->getCorreo(); ?></td>
+                <td><?php echo $factura->getFecha(); ?></td>
             </tr>
             </tbody>
         </table>
@@ -96,7 +101,7 @@ include_once("../layouts/nav.php");
                 <img src="<?php echo $objetoRepetido->getImagen() ?>"
                      class="align-self-end  ml-3"
                      alt="Producto"
-                     style="max-height: 150px; margin-right: 20px"
+                     style="height: 150px; margin-right: 20px; width: 150px"
                 >
                 <div class="media-body text-right">
                     <h5 class="mt-0"><?php echo $objetoRepetido->getnombre() ?></h5>

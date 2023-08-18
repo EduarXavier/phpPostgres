@@ -6,8 +6,8 @@ use controladores\ControladorProducto;
 
 $controladorProducto = new ControladorProducto();
 $productos = $controladorProducto->verProductos();
-$carrito = false;
 $nombrePagina = "Productos";
+$carrito = false;
 
 include_once("../layouts/header.php");
 include_once("../layouts/nav.php");

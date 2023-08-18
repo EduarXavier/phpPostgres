@@ -48,7 +48,8 @@ $usuario = $controladorUsuario->verUsuario($_SESSION["id"]);
                         class="form-control"
                         name="nombre"
                         value="<?php echo $usuario->getNombre()?>"
-                        readonly>
+                        readonly
+                    >
                 </div>
                 <div class="mb-3">
                     <label for="telefono" class="form-label">Teléfono</label>
@@ -57,7 +58,8 @@ $usuario = $controladorUsuario->verUsuario($_SESSION["id"]);
                         class="form-control"
                         name="telefono"
                         value="<?php echo $usuario->getTelefono()?>"
-                        autocomplete="off">
+                        autocomplete="off"
+                    >
                 </div>
                 <div class="mb-3">
                     <label for="correo" class="form-label">Correo</label>
@@ -67,7 +69,8 @@ $usuario = $controladorUsuario->verUsuario($_SESSION["id"]);
                         class="form-control"
                         name="correo"
                         value="<?php echo $usuario->getCorreo()?>"
-                        readonly>
+                        readonly
+                    >
                 </div>
                 <div class="mb-3">
                     <label for="direccion" class="form-label">Dirección</label>
@@ -76,7 +79,8 @@ $usuario = $controladorUsuario->verUsuario($_SESSION["id"]);
                         class="form-control"
                         name="direccion"
                         value="<?php echo $usuario->getDireccion()?>"
-                        autocomplete="off">
+                        autocomplete="off"
+                    >
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
@@ -84,9 +88,12 @@ $usuario = $controladorUsuario->verUsuario($_SESSION["id"]);
                         type="password"
                         class="form-control"
                         name="password"
-                        autocomplete="off">
+                        autocomplete="off"
+                    >
                 </div>
+
                 <button type="submit" class="btn btn-primary">Actualizar</button>
+
             </form>
         </div>
     </div>

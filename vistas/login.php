@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 $nombrePagina = "Login";
 include_once("layouts/header.php");
@@ -6,6 +7,7 @@ include_once("layouts/header.php");
 if(!empty($_SESSION["usuario"]) && !empty($_SESSION["rol"]))
 {
     header("Location: ../vistas/persona/dashboard.php");
+    exit();
 }
 
 ?>
@@ -22,7 +24,8 @@ if(!empty($_SESSION["usuario"]) && !empty($_SESSION["rol"]))
                         type="text"
                         class="form-control"
                         name="usuario"
-                        placeholder="Ingrese su usuario">
+                        placeholder="Ingrese su usuario"
+                >
             </div>
             <div class="mb-3">
                 <label for="contrasena" class="form-label">Contraseña</label>
@@ -31,15 +34,19 @@ if(!empty($_SESSION["usuario"]) && !empty($_SESSION["rol"]))
                         class="form-control"
                         id="contrasena"
                         name="clave"
-                        placeholder="Ingrese su contraseña">
+                        placeholder="Ingrese su contraseña"
+                >
             </div>
-            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+            <button type="submit" class="btn btn-primary w-25">Iniciar Sesión</button>
+            <a class="btn btn-primary w-25" href="persona/registroPersona.php">Registro</a>
         </form>
 
         <?php if(!empty($_GET["err"])): ?>
 
             <div class="alert alert-danger" style="margin-top: 20px" role="alert">
+
                 <?php echo $_GET["err"] ?>
+
             </div>
 
         <?php endif; ?>

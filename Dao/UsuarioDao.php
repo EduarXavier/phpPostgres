@@ -41,14 +41,11 @@ class UsuarioDao extends Conexion implements IUsuarioDao
                 $usuario->setDocumento($resultado[TPERSONADOCUMENTO]);
                 $usuario->setPassword($resultado[TPERSONAPASSWORD]);
 
-
                 return $usuario;
             }
 
         }
-
         return null;
-
     }
 
     public function findByDocumento(?string $documento): ?Persona
@@ -74,12 +71,10 @@ class UsuarioDao extends Conexion implements IUsuarioDao
                 $usuario->setDocumento($resultado[TPERSONADOCUMENTO]);
                 $usuario->setPassword($resultado[TPERSONAPASSWORD]);
 
-
                 return $usuario;
             }
 
         }
-
         return null;
 
     }
@@ -87,13 +82,18 @@ class UsuarioDao extends Conexion implements IUsuarioDao
     public function verUsuarios(): ?array
     {
         $sql = "SELECT * FROM ". TPERSONA. " LIMIT 100";
+
         $statement = $this->pdo->prepare($sql);
         $statement->execute();
+
         $usuarios = array();
+
         $resultados = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($resultados as $resultado){
+        foreach ($resultados as $resultado)
+        {
             $usuario = new Persona();
+
             $usuario->setId($resultado[TPERSONAID]);
             $usuario->setNombre($resultado[TPERSONANOMBRE]);
             $usuario->setTelefono($resultado[TPERSONATELEFONO]);
@@ -120,6 +120,7 @@ class UsuarioDao extends Conexion implements IUsuarioDao
             .":direccion, :documento, :rol, :password)";
 
         $statement = $this->pdo->prepare($sql);
+
         $nombre = $usuario->getNombre();
         $telefono = $usuario->getTelefono();
         $correo = $usuario->getCorreo();
@@ -146,7 +147,6 @@ class UsuarioDao extends Conexion implements IUsuarioDao
 
         if($findUser)
         {
-
             $sql = "UPDATE " .TPERSONA . " SET "
                 .TPERSONANOMBRE."= :nombre, "
                 .TPERSONATELEFONO. "= :telefono, "
@@ -157,14 +157,16 @@ class UsuarioDao extends Conexion implements IUsuarioDao
                 .TPERSONAID . "= :id ";
 
             $statement = $this->pdo->prepare($sql);
+
             $nombre = $usuario->getNombre() ?? $findUser->getNombre();
             $telefono = $usuario->getTelefono() ?? $findUser->getTelefono();
             $correo = $usuario->getCorreo() ?? $findUser->getCorreo();
             $direccion = $usuario->getDireccion() ?? $findUser->getDireccion();
             $documento = $usuario->getDocumento() ?? $findUser->getDocumento();
+
             $password = $usuario->getPassword() ?
                 password_hash($usuario->getPassword(), PASSWORD_DEFAULT)
-                :
+                    :
                 $findUser->getPassword();
 
             $id = $findUser->getId();
@@ -196,23 +198,29 @@ class UsuarioDao extends Conexion implements IUsuarioDao
             $statement = $this->pdo->prepare($sql);
 
             return $statement->execute();
-
         }
         else{
+
             throw new Exception("El usuario no ha sido encontrado");
+
         }
     }
 
     public function verClientes(): ?array
     {
         $sql = "SELECT * FROM ". TPERSONA . " WHERE " . TPERSONAROL . " = 2 LIMIT 100";
+
         $statement = $this->pdo->prepare($sql);
         $statement->execute();
+
         $usuarios = array();
+
         $resultados = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($resultados as $resultado){
+        foreach ($resultados as $resultado)
+        {
             $usuario = new Persona();
+
             $usuario->setId($resultado[TPERSONAID]);
             $usuario->setNombre($resultado[TPERSONANOMBRE]);
             $usuario->setTelefono($resultado[TPERSONATELEFONO]);
@@ -221,6 +229,7 @@ class UsuarioDao extends Conexion implements IUsuarioDao
             $usuario->setDireccion($resultado[TPERSONADIRECCION]);
             $usuario->setDocumento($resultado[TPERSONADOCUMENTO]);
             $usuario->setPassword($resultado[TPERSONAPASSWORD]);
+
             $usuarios[] = $usuario;
         }
 
@@ -242,6 +251,7 @@ class UsuarioDao extends Conexion implements IUsuarioDao
             foreach($resultados as $resultado)
             {
                 $usuario = new Persona();
+
                 $usuario->setId($resultado[TPERSONAID]);
                 $usuario->setNombre($resultado[TPERSONANOMBRE]);
                 $usuario->setTelefono($resultado[TPERSONATELEFONO]);
